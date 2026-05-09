@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarK Market Intelligence | Analyses premium</title>
+    <meta name="description" content="HarK Market Intelligence : analyses de marchés, crypto, macro, dérivés et pédagogie premium.">
+    
+    <style>
+        :root{
+            --bg:#03050b;
+            --bg-soft:#07111f;
+            --text:#f5f7fb;
+            --muted:#b7c0cf;
+            --line:rgba(255,255,255,.08);
+            --cyan:#5ee7ff;
+            --teal:#00ffb2;
+            --violet:#8a63ff;
+            --gold:#f6d06f;
+            --gold-soft:rgba(246,208,111,.18);
+            --glow:0 0 40px rgba(94,231,255,.22), 0 0 80px rgba(138,99,255,.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background:
+              radial-gradient(circle at 20% 0%, rgba(94,231,255,.08), transparent 30%),
+              radial-gradient(circle at 80% 10%, rgba(138,99,255,.10), transparent 30%),
+              linear-gradient(180deg,#03050b 0%, #02040a 55%, #050a12 100%);
+            color:var(--text);
+            line-height:1.6;
+            overflow-x:hidden;
+        }
+        body::before{
+            content:'';
+            position:fixed; inset:0;
+            pointer-events:none;
+            background:
+               linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+               linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: radial-gradient(circle at center, rgba(255,255,255,.55), transparent 78%);
+            opacity:.35;
+            z-index:0;
+        }
+        nav{
+            position:fixed; inset:0 0 auto 0; z-index:1000;
+            background:rgba(3,5,11,.62);
+            backdrop-filter: blur(18px) saturate(130%);
+            border-bottom:1px solid rgba(255,255,255,.07);
+            box-shadow:0 10px 30px rgba(0,0,0,.18);
+        }
+        .nav-container{
+            max-width:1400px; margin:0 auto; padding:1.15rem 2rem;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .logo{
+            font-size:1.4rem; font-weight:900; text-decoration:none; letter-spacing:.08em;
+            color:#fff;
+            text-transform:uppercase;
+        }
+        .logo span{
+            background:linear-gradient(135deg,var(--gold),#fff6cf 35%, var(--teal) 80%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            filter:drop-shadow(0 0 16px rgba(246,208,111,.18));
+        }
+        .nav-links{display:flex; gap:2rem; list-style:none}
+        .nav-links a{
+            color:#cad3df; text-decoration:none; font-size:.95rem; transition:.25s ease;
+            position:relative;
+        }
+        .nav-links a::after{
+            content:''; position:absolute; left:0; bottom:-.45rem; width:0; height:1px;
+            background:linear-gradient(90deg,var(--gold),var(--teal)); transition:.25s ease;
+        }
+        .nav-links a:hover{color:#fff}
+        .nav-links a:hover::after{width:100%}
+
+        .hero{
+            min-height:100vh;
+            position:relative; overflow:hidden;
+            display:flex; align-items:center; justify-content:center;
+            padding:8.5rem 2rem 4rem;
+            isolation:isolate;
+            background:
+              radial-gradient(circle at center, rgba(6,18,34,.25), rgba(3,5,11,.05) 45%, rgba(3,5,11,0) 60%);
+        }
+        .hero-bg-image{
+            position:absolute; inset:0;
+            width:100%; height:100%; object-fit:cover;
+            object-position:center center;
+            opacity:.97;
+            filter:saturate(1.12) contrast(1.08) brightness(.80);
+            transform:scale(1.05);
+            animation:heroFloat 14s ease-in-out infinite alternate;
+        }
+        .hero-vignette,
+        .hero-shade,
+        .hero-lights,
+        .hero-scan,
+        .hero-particles,
+        .hero-rings{position:absolute; inset:0; pointer-events:none}
+        .hero-shade{
+            z-index:1;
+            background:
+              radial-gradient(circle at 50% 52%, rgba(94,231,255,.12), transparent 25%),
+              linear-gradient(90deg, rgba(3,5,11,.82) 0%, rgba(3,5,11,.28) 23%, rgba(3,5,11,.08) 50%, rgba(3,5,11,.28) 77%, rgba(3,5,11,.82) 100%),
+              linear-gradient(180deg, rgba(3,5,11,.66) 0%, rgba(3,5,11,.18) 26%, rgba(3,5,11,.22) 60%, rgba(3,5,11,.92) 100%);
+        }
+        .hero-vignette{
+            z-index:2;
+            background:
+              radial-gradient(circle at 50% 18%, rgba(255,255,255,.06), transparent 30%),
+              radial-gradient(circle at 50% 110%, rgba(94,231,255,.18), transparent 24%);
+            mix-blend-mode:screen;
+            opacity:.75;
+        }
+        .hero-lights{
+            z-index:2;
+            background:
+              radial-gradient(circle at 50% 55%, rgba(94,231,255,.24), transparent 16%),
+              radial-gradient(circle at 56% 50%, rgba(255,255,255,.10), transparent 6%),
+              radial-gradient(circle at 44% 60%, rgba(246,208,111,.10), transparent 8%);
+            filter:blur(18px);
+            animation:pulseGlow 5s ease-in-out infinite;
+        }
+        .hero-scan{
+            z-index:2; overflow:hidden;
+        }
+        .hero-scan::before{
+            content:'';
+            position:absolute; inset:-15% -40%;
+            background:
+              linear-gradient(112deg, transparent 38%, rgba(255,255,255,.10) 48%, rgba(94,231,255,.20) 50%, rgba(255,255,255,.06) 52%, transparent 62%);
+            transform:translateX(-20%) skewX(-12deg);
+            animation:scanSweep 8s ease-in-out infinite;
+            opacity:.75;
+        }
+        .hero-rings{
+            z-index:2;
+            background:
+              radial-gradient(circle at 50% 57%, transparent 0 12%, rgba(94,231,255,.12) 12.4%, transparent 13.2%, transparent 18%, rgba(246,208,111,.08) 18.4%, transparent 19.1%, transparent 25%, rgba(94,231,255,.06) 25.3%, transparent 26%);
+            opacity:.35;
+            transform:scale(1.15);
+        }
+        .hero-particles{
+            z-index:2;
+            background-image:
+              radial-gradient(circle, rgba(255,255,255,.9) 0 1px, transparent 1.3px),
+              radial-gradient(circle, rgba(94,231,255,.65) 0 1.2px, transparent 1.8px),
+              radial-gradient(circle, rgba(246,208,111,.6) 0 1.1px, transparent 1.7px);
+            background-size: 180px 180px, 260px 260px, 320px 320px;
+            background-position: 10% 12%, 80% 18%, 35% 78%;
+            opacity:.26;
+            filter:blur(.2px);
+            animation:particlesDrift 18s linear infinite alternate;
+        }
+        .hero-content{
+            position:relative; z-index:4; text-align:center; max-width:1080px;
+            animation:riseIn 1s ease both;
+        }
+        .hero-badge{
+            display:inline-flex; align-items:center; gap:.65rem;
+            padding:.55rem .95rem;
+            border:1px solid rgba(246,208,111,.26);
+            background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+            backdrop-filter: blur(10px);
+            border-radius:999px;
+            color:#f9e4a0; font-size:.82rem; font-weight:700; letter-spacing:.12em;
+            text-transform:uppercase;
+            box-shadow:0 12px 28px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.16);
+            margin-bottom:1rem;
+        }
+        .hero-badge::before{
+            content:''; width:.5rem; height:.5rem; border-radius:50%;
+            background:radial-gradient(circle, #fff 0, var(--gold) 55%, transparent 70%);
+            box-shadow:0 0 14px rgba(246,208,111,.8);
+        }
+        .hero h1{
+            font-size:clamp(3.8rem, 8.5vw, 7.4rem);
+            line-height:.92; letter-spacing:-.05em; font-weight:950;
+            margin-bottom:.8rem;
+            color:#fff;
+            text-shadow:0 0 24px rgba(255,255,255,.14), 0 0 52px rgba(94,231,255,.12);
+        }
+        .hero h1 .line-gold{
+            display:block;
+            background:linear-gradient(135deg, #fff8dc 0%, var(--gold) 25%, #ffffff 45%, #91f5ff 85%, #c5b4ff 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            filter:drop-shadow(0 0 22px rgba(246,208,111,.18));
+        }
+        .hero-coach{
+            font-size:clamp(1rem, 2.2vw, 1.28rem);
+            letter-spacing:.24em;
+            text-transform:uppercase;
+            color:#eef4ff;
+            margin: 0 auto 1.15rem;
+            font-weight:800;
+            text-shadow:0 0 22px rgba(255,255,255,.10);
+        }
+        .hero-coach span{
+            color:#f4d98d;
+        }
+        .hero-subtitle{
+            max-width:900px; margin:0 auto 1.2rem;
+            font-size:clamp(1.05rem, 2.2vw, 1.4rem);
+            color:#d8dfeb; font-weight:400;
+        }
+        .hero-subtitle strong{color:#fff}
+        .hero-quote{
+            max-width:760px; margin:1.25rem auto 2rem;
+            color:#b7fff1; font-style:italic; font-size:1.08rem;
+            text-shadow:0 0 22px rgba(0,255,178,.12);
+        }
+        .hero-actions{
+            display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+            margin-top:2rem;
+        }
+        .hero-cta, .hero-ghost{
+            display:inline-flex; align-items:center; justify-content:center;
+            min-width:220px;
+            padding:1rem 1.5rem; border-radius:999px; text-decoration:none;
+            font-weight:800; transition:.28s ease; position:relative; overflow:hidden;
+            letter-spacing:.01em;
+        }
+        .hero-cta{
+            color:#041018;
+            background:linear-gradient(135deg, #fff2bf 0%, var(--gold) 40%, var(--teal) 100%);
+            box-shadow:0 18px 40px rgba(0,0,0,.25), 0 0 40px rgba(246,208,111,.12);
+        }
+        .hero-ghost{
+            color:#fff; border:1px solid rgba(255,255,255,.16);
+            background:rgba(255,255,255,.06);
+            backdrop-filter: blur(12px);
+        }
+        .hero-cta:hover, .hero-ghost:hover{
+            transform:translateY(-3px) scale(1.01);
+            box-shadow:0 22px 45px rgba(0,0,0,.28), 0 0 45px rgba(94,231,255,.08);
+        }
+        .hero-bottom-metrics{
+            display:grid;
+            grid-template-columns: repeat(3, minmax(170px, 1fr));
+            gap:1rem; max-width:880px; margin:2.2rem auto 0;
+        }
+        .metric{
+            padding:1rem 1.1rem;
+            border:1px solid rgba(255,255,255,.10);
+            border-radius:20px;
+            background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 34px rgba(0,0,0,.18);
+        }
+        .metric strong{display:block; font-size:1.25rem; color:#fff}
+        .metric span{font-size:.93rem; color:#c9d1de}
+
+        .about, .articles, .social, footer{position:relative; z-index:1}
+        .about{padding:6rem 2rem; background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.02))}
+        .container{max-width:1200px; margin:0 auto}
+        .section-title{
+            font-size:clamp(2.5rem, 5vw, 4rem); font-weight:800; margin-bottom:1rem; text-align:center;
+            letter-spacing:-.03em;
+        }
+        .section-subtitle{text-align:center; color:#9de9ff; font-size:1.08rem; margin-bottom:4rem; font-weight:600}
+        .about-content{
+            display:grid; grid-template-columns:250px 1fr; gap:4rem; align-items:start;
+            max-width:1000px; margin:0 auto;
+        }
+        .about-photo{
+            width:250px;height:250px;border-radius:50%;
+            border:1px solid rgba(255,255,255,.12);
+            box-shadow:0 20px 60px rgba(0,0,0,.35), 0 0 0 10px rgba(255,255,255,.03);
+            object-fit:cover;
+        }
+        .about-text{color:#ccd3df}
+        .about-text p{font-size:1.07rem; line-height:1.8; margin-bottom:1.5rem}
+        .about-highlight{
+            background:linear-gradient(90deg, rgba(246,208,111,.07), rgba(94,231,255,.05));
+            border:1px solid rgba(255,255,255,.08);
+            border-left:4px solid var(--gold);
+            padding:1.5rem; margin:2rem 0; border-radius:16px;
+        }
+        .about-highlight strong{color:#fff2bf}
+        .stats{
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:1.35rem; margin-top:4rem;
+        }
+        .stat-card, .article-card, .social-card{
+            background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+            border:1px solid rgba(255,255,255,.08);
+            box-shadow:0 18px 50px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05);
+        }
+        .stat-card{
+            padding:2rem; border-radius:22px; text-align:center; transition:.3s ease;
+        }
+        .stat-card:hover, .article-card:hover, .social-card:hover{
+            transform:translateY(-7px);
+            border-color:rgba(255,255,255,.16);
+            box-shadow:0 22px 60px rgba(0,0,0,.28), 0 0 26px rgba(94,231,255,.08);
+        }
+        .stat-number{font-size:3rem; font-weight:900; color:#fff2bf; margin-bottom:.35rem}
+        .stat-label{color:#aeb8c8; font-size:.95rem}
+
+        .articles{padding:6rem 2rem; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0))}
+        .articles-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:2rem; margin-top:4rem}
+        .article-card{
+            border-radius:22px; overflow:hidden; transition:.35s ease; cursor:pointer;
+            text-decoration:none; color:inherit; display:block;
+        }
+        .article-image{
+            width:100%; height:250px; object-fit:cover;
+            background:linear-gradient(135deg, rgba(138,99,255,.28), rgba(94,231,255,.16));
+        }
+        .article-content{padding:2rem}
+        .article-date{font-size:.85rem; color:#f4d98d; margin-bottom:.5rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase}
+        .article-title{font-size:1.55rem; font-weight:800; margin-bottom:1rem; line-height:1.3}
+        .article-excerpt{color:#aeb8c8; line-height:1.65; margin-bottom:1.5rem}
+        .article-tags{display:flex; gap:.5rem; flex-wrap:wrap}
+        .tag{
+            padding:.35rem .95rem; background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:999px; font-size:.84rem; color:#e8edf6;
+        }
+
+
+        .article-card-featured{
+            position:relative;
+            border-color:rgba(0,255,178,.28);
+            box-shadow:0 22px 70px rgba(0,0,0,.35), 0 0 42px rgba(0,255,178,.10), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .article-card-featured::before{
+            content:'NOUVEL ARTICLE';
+            position:absolute; top:1rem; left:1rem; z-index:2;
+            padding:.38rem .72rem; border-radius:999px;
+            background:rgba(0,255,178,.12); border:1px solid rgba(0,255,178,.35);
+            color:#00ffb2; font-size:.72rem; font-weight:900; letter-spacing:.12em;
+            backdrop-filter:blur(12px); box-shadow:0 0 24px rgba(0,255,178,.20);
+        }
+
+
+
+        .article-card-clarity{
+            border-color:rgba(246,208,111,.32);
+            box-shadow:0 22px 70px rgba(0,0,0,.35), 0 0 45px rgba(246,208,111,.11), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .article-card-clarity::before{
+            content:'NOUVEL ARTICLE';
+            background:rgba(246,208,111,.13);
+            border-color:rgba(246,208,111,.42);
+            color:#f6d06f;
+            box-shadow:0 0 24px rgba(246,208,111,.16);
+        }
+        .social{padding:6rem 2rem; background:linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.015))}
+        .social-links{display:flex; justify-content:center; gap:1rem; margin-top:3rem; flex-wrap:wrap}
+        .social-card{
+            display:flex; align-items:center; gap:1rem; padding:1.2rem 2rem;
+            border-radius:999px; text-decoration:none; color:#fff; transition:.3s ease; font-weight:700;
+        }
+        .social-icon{font-size:1.4rem}
+        footer{
+            padding:3rem 2rem;
+            border-top:1px solid rgba(255,255,255,.07);
+            text-align:center; color:#8d98aa;
+        }
+        .footer-content{max-width:1200px; margin:0 auto}
+
+        @keyframes heroFloat{
+            0%{transform:scale(1.05) translateY(0)}
+            100%{transform:scale(1.09) translateY(-12px)}
+        }
+        @keyframes pulseGlow{
+            0%,100%{opacity:.72; transform:scale(1)}
+            50%{opacity:1; transform:scale(1.03)}
+        }
+        @keyframes scanSweep{
+            0%{transform:translateX(-18%) skewX(-12deg); opacity:0}
+            18%,70%{opacity:.82}
+            100%{transform:translateX(18%) skewX(-12deg); opacity:0}
+        }
+        @keyframes particlesDrift{
+            0%{transform:translate3d(0,0,0)}
+            100%{transform:translate3d(16px,-16px,0)}
+        }
+        @keyframes riseIn{
+            from{opacity:0; transform:translateY(30px)}
+            to{opacity:1; transform:translateY(0)}
+        }
+
+        @media (max-width: 768px){
+            .nav-links{display:none}
+            .hero{padding-top:7.5rem}
+            .hero h1{font-size:3.2rem}
+            .hero-coach{letter-spacing:.14em}
+            .hero-bottom-metrics{grid-template-columns:1fr}
+            .about-content{grid-template-columns:1fr; text-align:center}
+            .about-photo{margin:0 auto}
+            .articles-grid, .stats{grid-template-columns:1fr}
+            .social-links{flex-direction:column; align-items:center}
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo"><span>HarK Trading</span></a>
+            <ul class="nav-links">
+                <li><a href="#articles">Articles</a></li>
+                <li><a href="#about">À propos</a></li>
+                <li><a href="#social">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    
+    <!-- Hero premium -->
+    <section class="hero">
+        <img src="img-whale.png" alt="Baleine et marché financier" class="hero-bg-image">
+        <div class="hero-shade"></div>
+        <div class="hero-vignette"></div>
+        <div class="hero-lights"></div>
+        <div class="hero-scan"></div>
+        <div class="hero-rings"></div>
+        <div class="hero-particles"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge">Marchés financiers • Crypto • Analyse</div>
+            <h1><span class="line-gold">HarK Trading</span></h1>
+            <p class="hero-coach">Market intelligence <span>crypto • macro • dérivés</span></p>
+            <p class="hero-subtitle">
+                Expert des marchés financiers • Spécialiste Crypto • Analyses techniques d'élite
+            </p>
+            <p class="hero-quote">
+                "Lire le marché avec précision, patience et vision long terme."
+            </p>
+
+            <div class="hero-actions">
+                <a href="#articles" class="hero-cta">Découvrir mes analyses</a>
+                <a href="#about" class="hero-ghost">Mon approche</a>
+            </div>
+
+            <div class="hero-bottom-metrics">
+                <div class="metric"><strong>Vision premium</strong><span>Un univers visuel haut de gamme inspiré des desks de marché.</span></div>
+                <div class="metric"><strong>Lecture du prix</strong><span>Analyse technique, structure de marché et timing d'exécution.</span></div>
+                <div class="metric"><strong>Approche claire</strong><span>Du contenu propre, pédagogique et orienté compréhension.</span></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- About avec photo -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">À propos</h2>
+            <p class="section-subtitle">Expert des marchés financiers & Trader passionné</p>
+            
+            <div class="about-content">
+                <img src="img-about.jpg" alt="HarK" class="about-photo">
+                
+                <div class="about-text">
+                    <p>
+                        Expert des marchés financiers, passionné par l'analyse technique, la structure de marché et la lecture des flux. 
+                        Mon approche combine <strong>price action</strong>, contexte macro, dérivés, liquidité et timing d'exécution pour rendre les marchés plus lisibles.
+                    </p>
+                    
+                    <div class="about-highlight">
+                        <p>
+                            <strong>📊 Unité de temps :</strong> Intraday & Swing Trading
+                        </p>
+                    </div>
+                    
+                    <p>
+                        Je publie des analyses pédagogiques, visuelles et structurées pour aider la communauté à comprendre ce qui se joue derrière les mouvements de prix :
+                        niveaux clés, momentum, psychologie de marché, flux institutionnels et zones de liquidité.
+                    </p>
+                    
+                    <p>
+                        L'objectif est simple : livrer une lecture claire, premium et indépendante, sans bruit inutile, avec une vraie exigence de qualité.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">6+</div>
+                    <div class="stat-label">Années d'expérience</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1K+</div>
+                    <div class="stat-label">Lecteurs mensuels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Analyses publiées</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles -->
+    <section class="articles" id="articles">
+        <div class="container">
+            <h2 class="section-title">Articles Récents</h2>
+            <p class="section-subtitle">Mes dernières analyses approfondies</p>
+
+            <div class="articles-grid">
+                <!-- Article Premium - Gamma Squeeze -->
+                <a href="gamma-squeeze.html" class="article-card article-card-featured">
+                    <img src="img-gamma-squeeze.png" alt="Gamma squeeze SPX - record historique options call" class="article-image">
+                    <div class="article-content">
+                        <div class="article-date">Mai 2026 · Market Structure</div>
+                        <h3 class="article-title">$2.6T de calls SPX : Wall Street a-t-elle enclenché un gamma squeeze ?</h3>
+                        <p class="article-excerpt">
+                            Notional record, dealer hedging, short gamma, flows options : décryptage premium de la mécanique invisible qui peut amplifier le spot.
+                        </p>
+                        <div class="article-tags">
+                            <span class="tag">Gamma</span>
+                            <span class="tag">SPX</span>
+                            <span class="tag">Options Flow</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article Premium - CLARITY Act -->
+                <a href="clarity-act.html" class="article-card article-card-featured article-card-clarity">
+                    <img src="img-clarity-act.png" alt="CLARITY Act - analyse HarK de la régulation crypto US" class="article-image">
+                    <div class="article-content">
+                        <div class="article-date">2025 · Régulation Crypto</div>
+                        <h3 class="article-title">CLARITY Act : la loi crypto US que le marché attend</h3>
+                        <p class="article-excerpt">
+                            Avantages, risques, SEC vs CFTC : analyse premium du cadre réglementaire américain et de son impact potentiel sur Bitcoin et la DeFi.
+                        </p>
+                        <div class="article-tags">
+                            <span class="tag">CLARITY Act</span>
+                            <span class="tag">Régulation</span>
+                            <span class="tag">Crypto US</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 1 - Bitcoin -->
+                <a href="bitcoin-cycles-baissiers.html" class="article-card">
+                    <img src="img-bitcoin.png" class="article-image" style="width:100%; height:250px; object-fit:cover; display:block;">
+                    <div class="article-content">
+                        <div class="article-date">Février 2026</div>
+                        <h3 class="article-title">Bitcoin : Analyse des cycles baissiers</h3>
+                        <p class="article-excerpt">
+                            Étude comparative des marchés baissiers du Bitcoin et analyse de l'évolution
+                            de la volatilité au fil des cycles.
+                        </p>
+                        <div class="article-tags">
+                            <span class="tag">Bitcoin</span>
+                            <span class="tag">Cycles</span>
+                            <span class="tag">Analyse Technique</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 2 - Solana -->
+                <a href="solana-2026-2027.html" class="article-card">
+                    <img src="img-solana.png" class="article-image" style="width:100%; height:250px; object-fit:cover; display:block;">
+                    <div class="article-content">
+                        <div class="article-date">Mars 2026</div>
+                        <h3 class="article-title">SOLANA 2026-2027 : La tokenisation comme prochain chapitre ?</h3>
+                        <p class="article-excerpt">
+                            Analyse approfondie de l'évolution de Solana : des NFT aux memecoins,
+                            et vers la tokenisation des actifs financiers traditionnels.
+                        </p>
+                        <div class="article-tags">
+                            <span class="tag">Solana</span>
+                            <span class="tag">RWA</span>
+                            <span class="tag">Long Terme</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Article 3 -->
+                
+
+                <!-- Article 4 - Pétrole -->
+                <a href="petrole-colonne-vertebrale.html" class="article-card">
+                    <img src="img-petrole.png" class="article-image" style="width:100%; height:250px; object-fit:cover; display:block;">
+                    <div class="article-content">
+                        <div class="article-date">Mars 2026</div>
+                        <h3 class="article-title">Le Pétrole : La Colonne Vertébrale Invisible</h3>
+                        <p class="article-excerpt">
+                            Ce qui fait vraiment tourner votre monde. Une plongée dans la dépendance invisible qui structure notre civilisation.
+                        </p>
+                        <div class="article-tags">
+                            <span class="tag">Pétrole</span>
+                            <span class="tag">Économie</span>
+                            <span class="tag">Géopolitique</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social -->
+    <section class="social" id="social">
+        <div class="container">
+            <h2 class="section-title">Restons connectés</h2>
+            <p class="section-subtitle">Suivez mon contenu et mes analyses</p>
+
+            <div class="social-links">
+                <a href="https://x.com/Hark_crypto" target="_blank" class="social-card">
+                    <span class="social-icon">𝕏</span>
+                    <span>Twitter / X</span>
+                </a>
+                <a href="solana-2026-2027.html" class="social-card">
+                    <span class="social-icon">📺</span>
+                    <span>Analyses premium</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">HarK Trading</p>
+            <p>&copy; 2026 HarK Trading. Tous droits réservés.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                Les analyses présentées ne constituent pas des conseils financiers.
+            </p>
+            <div style="margin-top:2.5rem;">
+                <span id="admin-dot" onclick="adminLogin()" style="
+                    display:inline-block; width:8px; height:8px; border-radius:50%;
+                    background:rgba(255,255,255,.10); cursor:pointer; transition:all .3s;
+                " title=""></span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay mot de passe -->
+    <div id="admin-overlay" style="
+        display:none; position:fixed; inset:0; z-index:9999;
+        background:rgba(0,0,0,.88); backdrop-filter:blur(14px);
+        align-items:center; justify-content:center;
+    ">
+        <div style="
+            background:linear-gradient(135deg,#07111f,#03050b);
+            border:1px solid rgba(94,231,255,.22);
+            border-radius:22px; padding:2.5rem 2rem; width:100%; max-width:380px;
+            box-shadow:0 0 80px rgba(94,231,255,.12), 0 0 200px rgba(138,99,255,.06);
+            text-align:center;
+        ">
+            <div style="font-size:2.2rem; margin-bottom:.6rem;">🔐</div>
+            <h3 style="color:#fff; font-size:1.15rem; font-weight:900; margin-bottom:.3rem; letter-spacing:.05em;">ACCÈS RESTREINT</h3>
+            <p style="color:#5d6b7a; font-size:.82rem; margin-bottom:1.8rem; letter-spacing:.08em; text-transform:uppercase;">HarK Trading — Zone privée</p>
+            <input id="admin-pwd" type="password" placeholder="Mot de passe secret" 
+                onkeydown="if(event.key==='Enter')checkAdmin()"
+                style="
+                    width:100%; padding:.9rem 1rem; border-radius:12px;
+                    border:1px solid rgba(255,255,255,.1);
+                    background:rgba(255,255,255,.05); color:#fff;
+                    font-size:1rem; outline:none; margin-bottom:.7rem;
+                    box-sizing:border-box; letter-spacing:.05em;
+                    transition:border .3s;
+                "
+                onfocus="this.style.borderColor='rgba(94,231,255,.4)'"
+                onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+            >
+            <div id="admin-error" style="color:#ff5555; font-size:.82rem; margin-bottom:.7rem; display:none;">
+                ❌ Mot de passe incorrect
+            </div>
+            <button onclick="checkAdmin()" style="
+                width:100%; padding:.9rem; border-radius:12px; border:none;
+                background:linear-gradient(135deg,#5ee7ff,#8a63ff);
+                color:#03050b; font-weight:900; font-size:.95rem; cursor:pointer;
+                margin-bottom:.7rem; letter-spacing:.06em;
+                box-shadow:0 6px 24px rgba(94,231,255,.25);
+                transition:transform .15s, box-shadow .15s;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                ENTRER
+            </button>
+            <button onclick="document.getElementById('admin-overlay').style.display='none'" style="
+                width:100%; padding:.7rem; border-radius:12px;
+                border:1px solid rgba(255,255,255,.08);
+                background:transparent; color:#5d6b7a; font-size:.85rem; cursor:pointer;
+            ">Annuler</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('admin-dot').addEventListener('mouseenter', function(){
+            this.style.background = 'rgba(94,231,255,.3)';
+            this.style.boxShadow = '0 0 8px rgba(94,231,255,.4)';
+        });
+        document.getElementById('admin-dot').addEventListener('mouseleave', function(){
+            this.style.background = 'rgba(255,255,255,.10)';
+            this.style.boxShadow = 'none';
+        });
+
+        function adminLogin() {
+            document.getElementById('admin-overlay').style.display = 'flex';
+            document.getElementById('admin-error').style.display = 'none';
+            document.getElementById('admin-pwd').value = '';
+            setTimeout(() => document.getElementById('admin-pwd').focus(), 100);
+        }
+
+        function checkAdmin() {
+            const pwd = document.getElementById('admin-pwd').value;
+            if (pwd === 'Jimpysarah121623.') {
+                // Accès HarK — dashboard complet
+                window.location.href = 'dashboard-secret.html';
+            } else if (pwd === 'HarkEleve2025!') {
+                // Accès Élèves — dashboard lecture seule
+                window.location.href = 'student-dashboard.html';
+            } else {
+                document.getElementById('admin-error').style.display = 'block';
+                document.getElementById('admin-pwd').value = '';
+                document.getElementById('admin-pwd').focus();
+            }
+        }
+
+        document.getElementById('admin-overlay').addEventListener('click', function(e){
+            if(e.target === this) this.style.display = 'none';
+        });
+    </script>
+
+</body>
+</html>

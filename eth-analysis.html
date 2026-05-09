@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLARITY Act — Analyse HarK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold2:#F0C870;--gold3:rgba(201,168,76,0.12);
+  --red:#E05555;--green:#4CAF82;--blue:#378ADD;
+  --bg:#060606;--bg2:#0d0d0d;--bg3:#141414;--bg4:#1a1a1a;
+  --text:#ECE8DF;--muted:#6B665F;--border:rgba(201,168,76,0.18);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.75;overflow-x:hidden;cursor:none}
+#cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:difference}
+#cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(201,168,76,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 6vw;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px) saturate(180%);background:rgba(6,6,6,.8);border-bottom:1px solid rgba(201,168,76,.07)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--gold);text-decoration:none;letter-spacing:.05em}
+.nav-right{display:flex;align-items:center;gap:2rem}
+.nav-tag{font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;font-family:'Syne',sans-serif}
+.nav-back{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Syne',sans-serif;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s}
+.nav-back:hover{color:var(--gold)}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:14vh 6vw 10vh;overflow:hidden}
+.h-grid{position:absolute;inset:-20%;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:60px 60px;animation:gridMove 20s linear infinite;z-index:1}
+@keyframes gridMove{0%{background-position:0 0}100%{background-position:60px 60px}}
+.h-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80vw;height:80vw;background:radial-gradient(circle,rgba(201,168,76,.06) 0%,transparent 60%);z-index:1;animation:glowPulse 6s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}}
+.h-rings{position:absolute;top:50%;left:50%;z-index:1;pointer-events:none}
+.h-ring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,.06);transform:translate(-50%,-50%)}
+.h-ring:nth-child(1){width:25vw;height:25vw;animation:spin 18s linear infinite}
+.h-ring:nth-child(2){width:50vw;height:50vw;animation:spin 30s linear infinite reverse}
+.h-ring:nth-child(3){width:80vw;height:80vw;animation:spin 46s linear infinite;border-color:rgba(201,168,76,.04)}
+.h-ring:nth-child(4){width:115vw;height:115vw;animation:spin 65s linear infinite reverse;border-color:rgba(201,168,76,.025)}
+@keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.h-dot{position:absolute;top:0;left:50%;width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 16px 5px rgba(201,168,76,.6);z-index:2;transform-origin:-12.5vw 0;animation:dotOrbit 18s linear infinite}
+@keyframes dotOrbit{from{transform:rotate(0deg) translateX(12.5vw)}to{transform:rotate(360deg) translateX(12.5vw)}}
+.h-lines{position:absolute;inset:0;z-index:1;overflow:hidden}
+.h-line{position:absolute;width:1px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,.07),transparent);top:0;bottom:0;animation:lineShimmer 5s ease infinite}
+.h-line:nth-child(1){left:15%;animation-delay:0s}.h-line:nth-child(2){left:35%;animation-delay:1s}.h-line:nth-child(3){left:65%;animation-delay:2s}.h-line:nth-child(4){left:85%;animation-delay:3s}
+@keyframes lineShimmer{0%,100%{opacity:0}50%{opacity:1}}
+.hero-content{position:relative;z-index:5;max-width:900px}
+.hero-meta{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;display:flex;align-items:center;gap:1.5rem;opacity:0;animation:fadeUp .8s ease .2s forwards}
+.hero-meta::before{content:'';display:block;width:36px;height:1px;background:var(--gold)}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(224,85,85,.08);border:1px solid rgba(224,85,85,.3);border-radius:2px;padding:3px 10px;color:var(--red);font-size:9px}
+.live-dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:blink 1.4s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,10vw,8.5rem);font-weight:800;line-height:.88;letter-spacing:-.03em;margin-bottom:2.5rem;opacity:0;animation:fadeUp .9s ease .35s forwards}
+.w-clarity{display:block;background:linear-gradient(135deg,var(--gold2) 0%,var(--gold) 50%,#7A5C10 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 40px rgba(201,168,76,.2));position:relative}
+.w-outline{display:block;-webkit-text-stroke:1px rgba(201,168,76,.25);color:transparent}
+.hero-desc{font-size:1.1rem;color:var(--muted);max-width:540px;margin-bottom:2.5rem;font-weight:300;line-height:1.8;opacity:0;animation:fadeUp .9s ease .5s forwards}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0;animation:fadeUp .9s ease .6s forwards}
+.pill{padding:5px 13px;border-radius:2px;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;border:1px solid}
+.pill-g{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.25);color:var(--gold)}
+.pill-r{background:rgba(224,85,85,.07);border-color:rgba(224,85,85,.2);color:var(--red)}
+.pill-b{background:rgba(55,138,221,.07);border-color:rgba(55,138,221,.2);color:#7AB5E8}
+.hero-counters{display:flex;gap:4rem;opacity:0;animation:fadeUp .9s ease .75s forwards}
+.ctr{display:flex;flex-direction:column}
+.ctr-n{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--gold2);line-height:1;letter-spacing:-.02em}
+.ctr-l{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:5px}
+.scroll-hint{position:absolute;right:5vw;bottom:10vh;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:5;opacity:0;animation:fadeIn 1s ease 1.2s forwards}
+.scroll-hint span{font-family:'Syne',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl}
+.scroll-bar{width:1px;height:60px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollAnim 2s ease-in-out infinite}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top}49%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* TICKER */
+.ticker-wrap{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:11px 0;overflow:hidden;position:relative;z-index:10}
+.ticker-track{display:flex;width:max-content;animation:ticker 28s linear infinite}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;padding:0 2.5rem;font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;color:var(--muted)}
+.ticker-item em{font-style:normal;color:var(--gold)}
+.t-up{color:var(--green)}.t-dn{color:var(--red)}
+.t-sep{width:3px;height:3px;background:var(--border);border-radius:50%;display:inline-block;margin:0 .5rem}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+.section{max-width:1100px;margin:0 auto;padding:9rem 6vw;position:relative;z-index:5}
+.s-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;display:flex;align-items:center;gap:14px}
+.s-label::after{content:'';flex:1;height:1px;background:var(--border);max-width:100px}
+h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:700;line-height:1.05;letter-spacing:-.025em;margin-bottom:.75rem}
+.lead-t{font-size:1.05rem;color:var(--muted);max-width:600px;margin-bottom:4rem;font-weight:300}
+
+/* WHAT IS */
+.wbox{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:3rem 3.5rem;position:relative;overflow:hidden;margin-bottom:4rem}
+.wbox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent)}
+.wbox::after{content:'CLARITY';position:absolute;bottom:-30px;right:-10px;font-family:'Syne',sans-serif;font-size:8rem;font-weight:800;color:rgba(201,168,76,.03);letter-spacing:-.05em;pointer-events:none;line-height:1}
+.wbox p{font-size:1.02rem;line-height:1.9;color:rgba(236,232,223,.8);margin-bottom:1rem}
+.wbox p:last-child{margin-bottom:0}
+.wbox strong{color:var(--gold2);font-weight:500}
+
+/* TIMELINE */
+.tl{position:relative;padding-left:2.5rem;margin:2rem 0 4rem}
+.tl::before{content:'';position:absolute;left:4px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold),rgba(201,168,76,0))}
+.tl-item{position:relative;margin-bottom:2.5rem}
+.tl-item::before{content:'';position:absolute;left:-2.3rem;top:6px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);box-shadow:0 0 12px rgba(201,168,76,.5);transition:box-shadow .3s}
+.tl-item:hover::before{box-shadow:0 0 24px rgba(201,168,76,.9)}
+.tl-date{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.tl-text{font-size:.9rem;color:rgba(236,232,223,.6);line-height:1.6}
+
+/* MARQUEE */
+.mq-wrap{overflow:hidden;padding:1.5rem 0;border-top:1px solid var(--border);margin-top:1rem}
+.mq{display:flex;gap:3rem;animation:marq 22s linear infinite;width:max-content}
+.mq-item{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:rgba(201,168,76,.05);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap}
+.mq-item.ac{color:rgba(201,168,76,.1)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* PROS CONS */
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-bottom:5rem}
+.pc-col{background:var(--bg2);padding:2.5rem}
+.pc-head{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:2rem;display:flex;align-items:center;gap:10px;padding-bottom:1.25rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.pc-head.g{color:var(--green)}.pc-head.r{color:var(--red)}
+.pc-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.g .pc-icon{background:rgba(76,175,130,.12);color:var(--green)}
+.r .pc-icon{background:rgba(224,85,85,.12);color:var(--red)}
+.pt{display:flex;gap:14px;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.03);transition:padding-left .25s}
+.pt:last-child{border:none;margin:0;padding:0}
+.pt:hover{padding-left:6px}
+.pt-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+.pc-col:first-child .pt-dot{background:rgba(76,175,130,.12);color:var(--green)}
+.pc-col:last-child .pt-dot{background:rgba(224,85,85,.12);color:var(--red)}
+.pt-body h4{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.pt-body p{font-size:.82rem;color:var(--muted);line-height:1.6}
+
+/* METERS */
+.meters{margin:3rem 0 5rem}
+.m-row{display:flex;align-items:center;gap:1rem;margin-bottom:12px}
+.m-label{font-size:.82rem;color:var(--muted);min-width:210px}
+.m-bar{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.m-fill{height:100%;border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1.4s cubic-bezier(.23,1,.32,1)}
+.mg{background:linear-gradient(90deg,#2A6E50,var(--green))}.mr{background:linear-gradient(90deg,#6E2A2A,var(--red))}.ma{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.m-pct{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;min-width:56px;text-align:right}
+
+/* DIVIDER */
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.15),transparent);margin:0 6vw;position:relative;z-index:5}
+
+/* SIGNALS */
+.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin:3rem 0}
+.sig{background:var(--bg3);padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden}
+.sig::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.2),transparent)}
+.sig-label{font-size:9px;font-family:'Syne',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.sig-val{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:6px;line-height:1}
+.sig-val.bear{color:var(--red)}.sig-val.neu{color:var(--gold)}.sig-val.sell{color:var(--red)}
+.sig-sub{font-size:.75rem;color:var(--muted)}
+
+/* ANALYSIS */
+.analysis{background:var(--bg2);border:1px solid rgba(201,168,76,.28);border-radius:3px;padding:4rem;position:relative;overflow:hidden}
+.analysis::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent)}
+.analysis-orb{position:absolute;top:-40%;right:-20%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.04) 0%,transparent 70%);animation:orbFloat 8s ease-in-out infinite;pointer-events:none}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}}
+.a-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.a-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#7A5C10);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#000;flex-shrink:0;position:relative}
+.a-avatar::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(201,168,76,.4);animation:apulse 3s ease infinite}
+@keyframes apulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:.2}}
+.a-by h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700}
+.a-by span{font-size:.82rem;color:var(--gold);letter-spacing:.04em}
+.verdict{margin-left:auto;background:rgba(224,85,85,.08);border:1px solid rgba(224,85,85,.25);border-radius:2px;padding:5px 14px;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+.a-body p{font-size:1.02rem;line-height:1.9;color:rgba(236,232,223,.78);margin-bottom:1.5rem}
+.a-body strong{color:var(--text);font-weight:500}
+.a-body p:last-child{margin-bottom:0}
+.quote{border-left:2px solid var(--gold);padding:1.5rem 2rem;margin:2.5rem 0;background:var(--gold3);border-radius:0 3px 3px 0;font-style:italic;font-size:1.1rem;color:var(--text);line-height:1.75;position:relative}
+.quote::before{content:'"';position:absolute;top:-30px;left:12px;font-size:5rem;font-family:'Syne',sans-serif;color:rgba(201,168,76,.1);line-height:1}
+.disclaimer{border-top:1px solid rgba(255,255,255,.04);padding-top:2.5rem;margin-top:4rem}
+.disclaimer p{font-size:.78rem;color:rgba(107,102,95,.5);line-height:1.6}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+.rv2{opacity:0;transform:translateY(28px);transition:opacity .8s ease .15s,transform .8s ease .15s}
+.rv2.on{opacity:1;transform:translateY(0)}
+
+/* FLOATER */
+.floater{position:fixed;pointer-events:none;z-index:2;opacity:0;animation:floatUp linear forwards}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) rotate(0deg) scale(.5)}10%{opacity:.6}90%{opacity:.2}100%{opacity:0;transform:translateY(-100vh) rotate(360deg) scale(1)}}
+
+@media(max-width:768px){
+  .pc,.signals{grid-template-columns:1fr}
+  .hero-counters{gap:2rem}
+  .analysis{padding:2rem}
+  .verdict{display:none}
+  .a-header{flex-wrap:wrap}
+  h1{font-size:3.5rem}
+  .wbox{padding:2rem}
+  .m-label{min-width:130px;font-size:.75rem}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="particles"></canvas>
+
+<nav>
+  <a class="nav-logo" href="index.html">HarK</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Retour</a>
+    <span class="nav-tag">Réglementation · 2025</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="h-grid"></div>
+  <div class="h-glow"></div>
+  <div class="h-rings">
+    <div class="h-ring"></div><div class="h-ring"></div>
+    <div class="h-ring"></div><div class="h-ring"></div>
+  </div>
+  <div class="h-dot"></div>
+  <div class="h-lines">
+    <div class="h-line"></div><div class="h-line"></div>
+    <div class="h-line"></div><div class="h-line"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-meta">
+      <span>HarK Research</span>
+      <span class="live-badge"><span class="live-dot"></span> Actualité US</span>
+    </div>
+    <h1>
+      <span class="w-clarity">CLARITY</span>
+      <span class="w-outline">ACT</span>
+    </h1>
+    <p class="hero-desc">La loi américaine qui doit réguler la crypto. Avantages, risques — et pourquoi le marché se trompe en l'attendant comme un catalyseur haussier.</p>
+    <div class="hero-pills">
+      <span class="pill pill-g">Régulation US</span>
+      <span class="pill pill-r">Sell the Rumor</span>
+      <span class="pill pill-b">🇺🇸 Signé 2025</span>
+      <span class="pill pill-g">Analyse HarK</span>
+    </div>
+    <div class="hero-counters">
+      <div class="ctr"><span class="ctr-n" id="c1">0</span><span class="ctr-l">Année signature</span></div>
+      <div class="ctr"><span class="ctr-n">$2.5T</span><span class="ctr-l">Marché impacté</span></div>
+      <div class="ctr"><span class="ctr-n" style="color:var(--red)">↓</span><span class="ctr-l">Tendance BTC</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-bar"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="tkr">
+    <span class="ticker-item">BTC <span class="t-dn">▼ Baissier</span><span class="t-sep"></span></span>
+    <span class="ticker-item">CLARITY ACT <span class="t-up">● En cours</span><span class="t-sep"></span></span>
+    <span class="ticker-item">SEC vs CFTC <em>Résolu ✓</em><span class="t-sep"></span></span>
+    <span class="ticker-item">Adoption institutionnelle <span class="t-up">↑ Fort</span><span class="t-sep"></span></span>
+    <span class="ticker-item">DeFi <span class="t-dn">⚠ Menacé</span><span class="t-sep"></span></span>
+    <span class="ticker-item">Sell the News <em>● Actif</em><span class="t-sep"></span></span>
+    <span class="ticker-item">Structure HTF BTC <span class="t-dn">▼ Cassée</span><span class="t-sep"></span></span>
+    <span class="ticker-item">Smart Money <em>En distribution</em><span class="t-sep"></span></span>
+    <span class="ticker-item">BTC <span class="t-dn">▼ Baissier</span><span class="t-sep"></span></span>
+    <span class="ticker-item">CLARITY ACT <span class="t-up">● En cours</span><span class="t-sep"></span></span>
+    <span class="ticker-item">SEC vs CFTC <em>Résolu ✓</em><span class="t-sep"></span></span>
+    <span class="ticker-item">Adoption institutionnelle <span class="t-up">↑ Fort</span><span class="t-sep"></span></span>
+    <span class="ticker-item">DeFi <span class="t-dn">⚠ Menacé</span><span class="t-sep"></span></span>
+    <span class="ticker-item">Sell the News <em>● Actif</em><span class="t-sep"></span></span>
+    <span class="ticker-item">Structure HTF BTC <span class="t-dn">▼ Cassée</span><span class="t-sep"></span></span>
+    <span class="ticker-item">Smart Money <em>En distribution</em><span class="t-sep"></span></span>
+  </div>
+</div>
+
+<!-- WHAT IS -->
+<section class="section">
+  <div class="s-label rv">Contexte réglementaire</div>
+  <h2 class="rv">Qu'est-ce que le <span style="color:var(--gold)">CLARITY Act</span> ?</h2>
+  <p class="lead-t rv">La loi qui tranche enfin dix ans de flou juridique entre la SEC et la CFTC.</p>
+  <div class="wbox rv2">
+    <p>Le <strong>CLARITY Act</strong> (Crypto Legal Accessibility and Regulatory Insight for the Twenty-First Century Act) est un projet de loi bipartisan américain qui établit un cadre réglementaire précis pour les actifs numériques. Il répond à la question centrale qui paralysait l'industrie depuis 2015 : les crypto-monnaies sont-elles des <strong>titres financiers</strong> (SEC) ou des <strong>matières premières</strong> (CFTC) ?</p>
+    <br>
+    <p>Le texte introduit le critère de <strong>décentralisation suffisante</strong> : si un protocole est suffisamment décentralisé, il échappe à la SEC et tombe sous la CFTC, bien plus favorable à l'innovation. Il inclut aussi un régime strict pour les <strong>stablecoins</strong> et des obligations de <strong>transparence pour les émetteurs</strong>. Sa signature est attendue en 2025, dans un contexte politique américain pro-crypto sous l'administration Trump.</p>
+  </div>
+  <div class="s-label rv">Calendrier législatif</div>
+  <div class="tl rv2">
+    <div class="tl-item"><div class="tl-date">2023</div><div class="tl-text">Premiers débats au Congrès. Gensler (SEC) multiplie les poursuites, semant la panique dans le secteur crypto.</div></div>
+    <div class="tl-item"><div class="tl-date">Nov. 2024 — Trump élu</div><div class="tl-text">Changement de majorité. L'administration affiche son soutien aux crypto-actifs. Gensler démissionne. Le vent tourne.</div></div>
+    <div class="tl-item"><div class="tl-date">T1 2025</div><div class="tl-text">Le CLARITY Act passe en commission avec un soutien bipartisan rare. L'industrie respire pour la première fois depuis des années.</div></div>
+    <div class="tl-item"><div class="tl-date">Mi-2025 — Attendu</div><div class="tl-text">Signature présidentielle. Entrée en vigueur progressive sur 18 mois selon les secteurs d'activité.</div></div>
+  </div>
+  <div class="mq-wrap rv">
+    <div class="mq">
+      <span class="mq-item">CLARITY ACT</span><span class="mq-item ac">·</span><span class="mq-item">RÉGULATION CRYPTO</span><span class="mq-item ac">·</span><span class="mq-item">SEC CFTC</span><span class="mq-item ac">·</span><span class="mq-item">SELL THE RUMOR</span><span class="mq-item ac">·</span>
+      <span class="mq-item">CLARITY ACT</span><span class="mq-item ac">·</span><span class="mq-item">RÉGULATION CRYPTO</span><span class="mq-item ac">·</span><span class="mq-item">SEC CFTC</span><span class="mq-item ac">·</span><span class="mq-item">SELL THE RUMOR</span><span class="mq-item ac">·</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROS CONS -->
+<section class="section">
+  <div class="s-label rv">Analyse objective</div>
+  <h2 class="rv">Avantages <span style="color:var(--muted);font-weight:300">&amp;</span> Risques</h2>
+  <p class="lead-t rv">Une loi attendue — mais qui ne règle pas tout, loin de là.</p>
+  <div class="pc rv2">
+    <div class="pc-col">
+      <div class="pc-head g"><div class="pc-icon">+</div>Avantages</div>
+      <div class="pt"><div class="pt-dot">✓</div><div class="pt-body"><h4>Clarté juridique enfin</h4><p>Les projets savent à quel régulateur répondre. Exit la guerre SEC / CFTC qui bloquait l'innovation depuis des années.</p></div></div>
+      <div class="pt"><div class="pt-dot">✓</div><div class="pt-body"><h4>Adoption institutionnelle accélérée</h4><p>Les grandes banques et fonds attendaient ce cadre pour déployer des capitaux massifs. Le feu vert légal est donné.</p></div></div>
+      <div class="pt"><div class="pt-dot">✓</div><div class="pt-body"><h4>Retour des projets US</h4><p>Nombreux protocoles avaient quitté les USA. La clarté peut rapatrier talent et capital dans l'écosystème américain.</p></div></div>
+      <div class="pt"><div class="pt-dot">✓</div><div class="pt-body"><h4>Légitimité mondiale</h4><p>Quand les USA régulent, le monde suit. Une loi américaine solide propulse la crypto dans la finance mainstream globale.</p></div></div>
+      <div class="pt"><div class="pt-dot">✓</div><div class="pt-body"><h4>Stablecoins sécurisés</h4><p>Un cadre stablecoin clair réduit le risque systémique et ouvre la voie aux paiements crypto dans le commerce traditionnel.</p></div></div>
+    </div>
+    <div class="pc-col">
+      <div class="pc-head r"><div class="pc-icon">−</div>Risques</div>
+      <div class="pt"><div class="pt-dot">✗</div><div class="pt-body"><h4>Régulation = friction</h4><p>Chaque règle ajoute des coûts de conformité. Les petits projets DeFi seront étranglés par des obligations faites pour les géants.</p></div></div>
+      <div class="pt"><div class="pt-dot">✗</div><div class="pt-body"><h4>KYC / AML généralisé</h4><p>La traçabilité imposée aux protocoles détruit la confidentialité — un des piliers originels de Bitcoin et de la DeFi.</p></div></div>
+      <div class="pt"><div class="pt-dot">✗</div><div class="pt-body"><h4>Centralisation forcée</h4><p>Pour prouver leur décentralisation (critère CFTC), les protocoles répondent à des critères bureaucratiques. Paradoxe total.</p></div></div>
+      <div class="pt"><div class="pt-dot">✗</div><div class="pt-body"><h4>Déjà dans les prix</h4><p>Le marché anticipe cette loi depuis 2024. L'impact haussier à la signature sera marginal. Le vrai trade, c'était avant.</p></div></div>
+      <div class="pt"><div class="pt-dot">✗</div><div class="pt-body"><h4>Implémentation incertaine</h4><p>Entre signature et application réelle, des années. Les régulateurs peuvent interpréter le texte de façon très restrictive.</p></div></div>
+    </div>
+  </div>
+  <div class="s-label rv">Impact estimé par secteur</div>
+  <div class="meters rv2" id="meters">
+    <div class="m-row"><span class="m-label">Adoption institutionnelle</span><div class="m-bar"><div class="m-fill mg" data-p=".85"></div></div><span class="m-pct" style="color:var(--green)">Élevé</span></div>
+    <div class="m-row"><span class="m-label">Impact prix BTC court terme</span><div class="m-bar"><div class="m-fill mr" data-p=".22"></div></div><span class="m-pct" style="color:var(--red)">Faible</span></div>
+    <div class="m-row"><span class="m-label">DeFi / protocoles décentralisés</span><div class="m-bar"><div class="m-fill mr" data-p=".35"></div></div><span class="m-pct" style="color:var(--red)">Risqué</span></div>
+    <div class="m-row"><span class="m-label">Stablecoins réglementés</span><div class="m-bar"><div class="m-fill mg" data-p=".9"></div></div><span class="m-pct" style="color:var(--green)">Très fort</span></div>
+    <div class="m-row"><span class="m-label">Confidentialité on-chain</span><div class="m-bar"><div class="m-fill mr" data-p=".12"></div></div><span class="m-pct" style="color:var(--red)">Menacée</span></div>
+    <div class="m-row"><span class="m-label">Exchanges centralisés (CEX)</span><div class="m-bar"><div class="m-fill ma" data-p=".72"></div></div><span class="m-pct" style="color:var(--gold)">Moyen</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HARK ANALYSIS -->
+<section class="section">
+  <div class="s-label rv">Point de vue</div>
+  <h2 class="rv">Sell the Rumor</h2>
+  <p class="lead-t rv">La régulation n'inverse pas une structure baissière. Les faits d'abord.</p>
+  <div class="signals rv">
+    <div class="sig"><div class="sig-label">Tendance BTC HTF</div><div class="sig-val bear">Baissière</div><div class="sig-sub">Structure HTF cassée</div></div>
+    <div class="sig"><div class="sig-label">CLARITY Act = catalyseur ?</div><div class="sig-val neu">Déjà pricé</div><div class="sig-sub">Anticipé depuis 2024</div></div>
+    <div class="sig"><div class="sig-label">Setup recommandé</div><div class="sig-val sell">Sell rumor</div><div class="sig-sub">Pas d'achat dans l'euphorie</div></div>
+  </div>
+  <div class="analysis rv2">
+    <div class="analysis-orb"></div>
+    <div class="a-header">
+      <div class="a-avatar">H</div>
+      <div class="a-by">
+        <h3>HarK</h3>
+        <span>Analyste &amp; Créateur de contenu crypto</span>
+      </div>
+      <div class="verdict">⬇ Bearish BTC</div>
+    </div>
+    <div class="a-body">
+      <p>Soyons directs : <strong>le CLARITY Act est une bonne nouvelle pour l'écosystème crypto sur le long terme.</strong> Mais en tant qu'analyste de marché, ma question n'est pas "est-ce que c'est bien ?" — ma question est "est-ce que le marché l'a déjà pricé ?" Et là, la réponse est sans appel : <strong>oui, et depuis longtemps.</strong></p>
+      <div class="quote">Le marché a anticipé cette loi depuis l'élection de Trump. Acheter sur la signature, c'est acheter après tout le monde — exactement ce que veut le smart money pour te vendre sa position quand tu crois enfin au bullrun.</div>
+      <p>Sur ma lecture de structure, <strong>Bitcoin reste dans une tendance baissière.</strong> Les niveaux HTF n'ont pas été recouvrés. Les Lower Highs se confirment. Dans ce contexte, l'arrivée d'une narrative positive comme le CLARITY Act est <strong>exactement le moment où le smart money distribue</strong> — pas où il accumule.</p>
+      <p>Beaucoup attendent ce texte comme un signal d'entrée massif. C'est de la pensée magique. <strong>La régulation ne crée pas de liquidité.</strong> Elle organise le marché. Les grandes institutions qui voulaient entrer sont déjà entrées via les ETF Bitcoin spot. L'argument "les institutionnels arrivent avec le CLARITY Act" est obsolète depuis fin 2024.</p>
+      <p><strong>Mon positionnement :</strong> je reste en attente. Je surveille les niveaux de structure. Si BTC pompe sur la narrative CLARITY Act, je cherche des setups en réaction sur les extensions — pas des longs dans l'euphorie. Le principe du <strong>"sell the news"</strong> s'applique ici avec une clarté presque textbook.</p>
+      <p style="color:var(--muted);font-size:.88rem;font-style:italic">Je suis en formation permanente sur les marchés. Ce contenu reflète ma vision personnelle à un instant T et non un conseil en investissement. Je suis le prix, pas la narrative.</p>
+    </div>
+    <div class="disclaimer">
+      <p><strong>Disclaimer —</strong> Ce contenu est fourni à titre éducatif et informatif uniquement. Il ne constitue pas un conseil en investissement. Le trading de crypto-monnaies comporte des risques significatifs de perte en capital. HarK ne saurait être tenu responsable des décisions prises sur la base de ces analyses. Faites toujours vos propres recherches (DYOR).</p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.pt,.tl-item,.sig').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='14px';cur.style.height='14px';ring.style.width='50px';ring.style.height='50px'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';ring.style.width='32px';ring.style.height='32px'});
+});
+
+/* PARTICLES */
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',()=>{resize();init()});
+let pts=[];
+function init(){pts=[];const n=Math.floor(window.innerWidth/7);for(let i=0;i<n;i++)pts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,r:Math.random()*1.1+.2,a:Math.random()*.35+.04})}
+init();
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach((p,i)=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(201,168,76,${p.a})`;ctx.fill();
+    for(let j=i+1;j<pts.length;j++){
+      const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(201,168,76,${.07*(1-d/110)})`;ctx.lineWidth=.4;ctx.stroke()}
+    }
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* COUNTER */
+function animCount(el,target,dur){let s=null;(function step(ts){if(!s)s=ts;const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(e*target);if(p<1)requestAnimationFrame(step)})(performance.now())}
+let c1done=false;
+const c1=document.getElementById('c1');
+new IntersectionObserver(e=>{if(e[0].isIntersecting&&!c1done){c1done=true;animCount(c1,2025,1800)}}).observe(c1);
+
+/* SCROLL REVEAL + METERS */
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      if(e.target.id==='meters')e.target.querySelectorAll('.m-fill').forEach(f=>{f.style.transform=`scaleX(${f.dataset.p})`});
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.rv,.rv2').forEach(el=>ro.observe(el));
+
+/* PARALLAX */
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  const g=document.querySelector('.h-glow');
+  if(g)g.style.transform=`translate(calc(-50% + ${y*.015}px),calc(-50% + ${y*.04}px)) scale(${1+y*.0003})`;
+});
+
+/* FLOATERS on scroll */
+let lastY=0;
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  if(Math.abs(y-lastY)>40){lastY=y;spawnF()}
+});
+function spawnF(){
+  const f=document.createElement('div');
+  f.className='floater';
+  const c=['₿','◈','⬡','◆','▲','◉'];
+  f.textContent=c[Math.floor(Math.random()*c.length)];
+  f.style.cssText=`left:${Math.random()*100}vw;top:${60+Math.random()*30}vh;font-family:monospace;font-size:${10+Math.random()*16}px;color:rgba(201,168,76,${.1+Math.random()*.2});animation-duration:${3+Math.random()*5}s`;
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),8000);
+}
+</script>
+</body>
+</html>
